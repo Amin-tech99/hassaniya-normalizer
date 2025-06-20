@@ -6,9 +6,6 @@ variant lookups with letter-level rules.
 
 import json
 from typing import Dict, List
-from importlib import resources
-from .rules import apply_letter_rules
-
 # Global variables for caching
 _variant_dict: Dict[str, str] = {}
 unknown_variants: List[str] = []
@@ -26,17 +23,11 @@ def load_variants(force_reload: bool = False) -> Dict[str, str]:
     global _variant_dict
     if not _variant_dict or force_reload:
         try:
-            # Try to load from package data first
-            try:
-                with resources.open_text('data', 'hassaniya_variants.jsonl') as f:
-                    lines = f.readlines()
-            except (FileNotFoundError, ModuleNotFoundError):
-                # Fallback to relative path
-                import os
-                current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                variants_file = os.path.join(current_dir, 'data', 'hassaniya_variants.jsonl')
-                with open(variants_file, 'r', encoding='utf-8') as f:
-                    lines = f.readlines()
+            import os
+            current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            variants_file = os.path.join(current_dir, 'data', 'hassaniya_variants.jsonl')
+            with open(variants_file, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
             
             for line in lines:
                 line = line.strip()

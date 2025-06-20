@@ -6,8 +6,6 @@ including exception handling for specific words.
 
 import json
 from typing import Set
-from importlib import resources
-
 # Global variable to store exception words
 _exception_words: Set[str] = set()
 
@@ -24,17 +22,11 @@ def load_exceptions(force_reload: bool = False) -> Set[str]:
     global _exception_words
     if not _exception_words or force_reload:
         try:
-            # Try to load from package data first
-            try:
-                with resources.open_text('data', 'exception_words_g_q.json') as f:
-                    _exception_words = set(json.load(f))
-            except (FileNotFoundError, ModuleNotFoundError):
-                # Fallback to relative path
-                import os
-                current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-                exception_file = os.path.join(current_dir, 'data', 'exception_words_g_q.json')
-                with open(exception_file, 'r', encoding='utf-8') as f:
-                    _exception_words = set(json.load(f))
+            import os
+            current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            exception_file = os.path.join(current_dir, 'data', 'exception_words_g_q.json')
+            with open(exception_file, 'r', encoding='utf-8') as f:
+                _exception_words = set(json.load(f))
         except (FileNotFoundError, json.JSONDecodeError):
             # If file doesn't exist or is malformed, use empty set
             _exception_words = set()
