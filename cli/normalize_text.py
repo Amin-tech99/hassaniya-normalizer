@@ -13,7 +13,7 @@ from typing import List
 # Add parent directory to path to import normalizer
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from normalizer import normalize_text, unknown_variants, clear_unknown_variants
+from normalizer import normalize_text, unknown_variants, clear_unknown_variants, reload_data
 
 
 def highlight_diff(original: str, normalized: str) -> str:
@@ -78,6 +78,9 @@ def main() -> None:
     except Exception as e:
         print(f"Error reading input file: {e}", file=sys.stderr)
         sys.exit(1)
+    
+    # Reload data to ensure we're using the latest files
+    reload_data()
     
     # Clear previous unknown variants
     clear_unknown_variants()

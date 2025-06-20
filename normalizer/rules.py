@@ -12,14 +12,17 @@ from importlib import resources
 _exception_words: Set[str] = set()
 
 
-def load_exceptions() -> Set[str]:
+def load_exceptions(force_reload: bool = False) -> Set[str]:
     """Load exception words from the JSON file.
+    
+    Args:
+        force_reload: If True, reload data even if already cached.
     
     Returns:
         Set of words that should not have گ/ق replaced with ك.
     """
     global _exception_words
-    if not _exception_words:
+    if not _exception_words or force_reload:
         try:
             # Try to load from package data first
             try:
@@ -68,3 +71,14 @@ def apply_letter_rules(word: str) -> str:
         result = result[:-1] + 'ه'
     
     return result
+
+
+def reload_exceptions() -> None:
+    """Force reload of exception words from the JSON file.
+    
+    This clears the cache and reloads data from files.
+    Useful when exception words file has been updated.
+    """
+    global _exception_words
+    _exception_words = set()
+    load_exceptions(force_reload=True)

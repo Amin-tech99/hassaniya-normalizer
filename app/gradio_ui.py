@@ -13,7 +13,7 @@ from typing import Tuple, Dict, List
 # Add parent directory to path to import normalizer
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from normalizer import normalize_text, unknown_variants, clear_unknown_variants
+from normalizer import normalize_text, unknown_variants, clear_unknown_variants, reload_data
 
 
 def load_variants_data() -> List[Dict[str, any]]:
@@ -284,6 +284,9 @@ def normalize_with_options(text: str, show_diff: bool) -> Tuple[str, str]:
     """
     if not text.strip():
         return "", "No text provided."
+    
+    # Reload data to ensure we're using the latest files
+    reload_data()
     
     # Clear previous unknown variants
     clear_unknown_variants()

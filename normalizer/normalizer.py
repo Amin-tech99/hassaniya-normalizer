@@ -14,14 +14,17 @@ _variant_dict: Dict[str, str] = {}
 unknown_variants: List[str] = []
 
 
-def load_variants() -> Dict[str, str]:
+def load_variants(force_reload: bool = False) -> Dict[str, str]:
     """Load variant mappings from JSONL file.
+    
+    Args:
+        force_reload: If True, reload data even if already cached.
     
     Returns:
         Dictionary mapping variant words to their canonical forms.
     """
     global _variant_dict
-    if not _variant_dict:
+    if not _variant_dict or force_reload:
         try:
             # Try to load from package data first
             try:
@@ -118,3 +121,18 @@ def clear_unknown_variants() -> None:
     """
     global unknown_variants
     unknown_variants.clear()
+
+
+def reload_data() -> None:
+    """Force reload of all data files (variants and exceptions).
+    
+    This clears the cache and reloads data from files.
+    Useful when data files have been updated.
+    """
+    global _variant_dict
+    _variant_dict = {}
+    load_variants(force_reload=True)
+    
+    # Also reload exceptions from rules module
+    from .rules import reload_exceptions
+    reload_exceptions()

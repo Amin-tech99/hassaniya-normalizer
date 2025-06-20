@@ -15,7 +15,7 @@ from flask_cors import CORS
 # Add parent directory to path to import normalizer
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from normalizer import normalize_text, unknown_variants, clear_unknown_variants
+from normalizer import normalize_text, unknown_variants, clear_unknown_variants, reload_data
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all routes
@@ -144,6 +144,9 @@ def api_normalize():
         
         text = data['text']
         show_diff = data.get('show_diff', False)
+        
+        # Reload data to ensure we're using the latest files
+        reload_data()
         
         # Clear previous unknown variants
         clear_unknown_variants()
