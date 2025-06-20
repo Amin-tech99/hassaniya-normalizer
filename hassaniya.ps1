@@ -60,11 +60,11 @@ function Test-PythonInstalled {
     try {
         $pythonVersion = python --version 2>$null
         if ($pythonVersion) {
-            Write-Host "✓ Python found: $pythonVersion" -ForegroundColor Green
+            Write-Host "[OK] Python found: $pythonVersion" -ForegroundColor Green
             return $true
         }
     } catch {
-        Write-Host "✗ Python not found. Please install Python 3.8+ from https://python.org" -ForegroundColor Red
+        Write-Host "[ERROR] Python not found. Please install Python 3.8+ from https://python.org" -ForegroundColor Red
         return $false
     }
     return $false
@@ -75,14 +75,14 @@ function Test-DependenciesInstalled {
     try {
         python -c "import gradio, flask, flask_cors" 2>$null
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✓ Dependencies are installed" -ForegroundColor Green
+            Write-Host "[OK] Dependencies are installed" -ForegroundColor Green
             return $true
         } else {
-            Write-Host "✗ Some dependencies are missing" -ForegroundColor Yellow
+            Write-Host "[WARNING] Some dependencies are missing" -ForegroundColor Yellow
             return $false
         }
     } catch {
-        Write-Host "✗ Error checking dependencies" -ForegroundColor Red
+        Write-Host "[ERROR] Error checking dependencies" -ForegroundColor Red
         return $false
     }
 }
@@ -94,25 +94,25 @@ function Install-Dependencies {
     # Install main requirements
     python -m pip install -r requirements.txt
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "✗ Failed to install main requirements" -ForegroundColor Red
+        Write-Host "[ERROR] Failed to install main requirements" -ForegroundColor Red
         return $false
     }
     
     # Install web UI requirements
     python -m pip install -r web_ui/requirements.txt
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "✗ Failed to install web UI requirements" -ForegroundColor Red
+        Write-Host "[ERROR] Failed to install web UI requirements" -ForegroundColor Red
         return $false
     }
     
-    Write-Host "✓ Dependencies installed successfully" -ForegroundColor Green
+    Write-Host "[OK] Dependencies installed successfully" -ForegroundColor Green
     return $true
 }
 
 # Function to show help
 function Show-Help {
     Write-Host @"
-🔤 Hassaniya Text Normalizer - PowerShell Interface
+Hassaniya Text Normalizer - PowerShell Interface
 
 USAGE:
     .\hassaniya.ps1 <action> [options]
@@ -159,17 +159,17 @@ switch ($Action) {
         }
         
         if (Install-Dependencies) {
-            Write-Host "\n✓ Installation complete! You can now run:" -ForegroundColor Green
+            Write-Host "`n[OK] Installation complete! You can now run:" -ForegroundColor Green
             Write-Host "    .\hassaniya.ps1 web" -ForegroundColor Cyan
         } else {
-            Write-Host "\n✗ Installation failed" -ForegroundColor Red
+            Write-Host "`n[ERROR] Installation failed" -ForegroundColor Red
             exit 1
         }
         exit 0
     }
     
     'web' {
-        Write-Host "🚀 Starting Hassaniya Text Normalizer Web Interface..." -ForegroundColor Cyan
+        Write-Host "Starting Hassaniya Text Normalizer Web Interface..." -ForegroundColor Cyan
         
         if (-not (Test-PythonInstalled)) {
             exit 1
@@ -182,7 +182,7 @@ switch ($Action) {
             }
         }
         
-        Write-Host "\n📱 Web interface will open at: http://localhost:5000" -ForegroundColor Green
+        Write-Host "`nWeb interface will open at: http://localhost:5000" -ForegroundColor Green
         Write-Host "Press Ctrl+C to stop the server" -ForegroundColor Yellow
         Write-Host "" # Empty line
         
@@ -190,7 +190,7 @@ switch ($Action) {
     }
     
     'gradio' {
-        Write-Host "🚀 Starting Hassaniya Text Normalizer Gradio Interface..." -ForegroundColor Cyan
+        Write-Host "Starting Hassaniya Text Normalizer Gradio Interface..." -ForegroundColor Cyan
         
         if (-not (Test-PythonInstalled)) {
             exit 1
@@ -203,7 +203,7 @@ switch ($Action) {
             }
         }
         
-        Write-Host "\n📱 Gradio interface will open automatically in your browser" -ForegroundColor Green
+        Write-Host "`nGradio interface will open automatically in your browser" -ForegroundColor Green
         Write-Host "Press Ctrl+C to stop the server" -ForegroundColor Yellow
         Write-Host "" # Empty line
         
@@ -212,13 +212,13 @@ switch ($Action) {
     
     'normalize' {
         if (-not $InputFile -or -not $OutputFile) {
-            Write-Host "✗ Error: InputFile and OutputFile are required for normalize action" -ForegroundColor Red
+            Write-Host "[ERROR] InputFile and OutputFile are required for normalize action" -ForegroundColor Red
             Write-Host "Usage: .\hassaniya.ps1 normalize -InputFile 'input.txt' -OutputFile 'output.txt'" -ForegroundColor Yellow
             exit 1
         }
         
         if (-not (Test-Path $InputFile)) {
-            Write-Host "✗ Error: Input file '$InputFile' does not exist" -ForegroundColor Red
+            Write-Host "[ERROR] Input file '$InputFile' does not exist" -ForegroundColor Red
             exit 1
         }
         
@@ -226,7 +226,7 @@ switch ($Action) {
             exit 1
         }
         
-        Write-Host "🔤 Normalizing text from '$InputFile' to '$OutputFile'..." -ForegroundColor Cyan
+        Write-Host "Normalizing text from '$InputFile' to '$OutputFile'..." -ForegroundColor Cyan
         
         $args = @("--in", $InputFile, "--out", $OutputFile)
         if ($ShowDiff) {
@@ -236,15 +236,15 @@ switch ($Action) {
         python -m cli.normalize_text @args
         
         if ($LASTEXITCODE -eq 0) {
-            Write-Host "✓ Text normalization completed successfully" -ForegroundColor Green
+            Write-Host "[OK] Text normalization completed successfully" -ForegroundColor Green
         } else {
-            Write-Host "✗ Text normalization failed" -ForegroundColor Red
+            Write-Host "[ERROR] Text normalization failed" -ForegroundColor Red
             exit 1
         }
     }
     
     default {
-        Write-Host "✗ Unknown action: $Action" -ForegroundColor Red
+        Write-Host "[ERROR] Unknown action: $Action" -ForegroundColor Red
         Show-Help
         exit 1
     }
