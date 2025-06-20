@@ -1,0 +1,27 @@
+# Include data files
+include data/*.json
+include data/*.jsonl
+include README.md
+include LICENSE
+include requirements.txt
+
+# Include web UI files
+recursive-include web_ui *.html *.css *.js *.txt
+
+# Include CLI files
+recursive-include cli *.py
+
+# Include test files
+recursive-include tests *.py
+
+# Include scripts
+include *.ps1
+include *.bat
+include *.sh
+
+# Exclude cache and build files
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude .DS_Store
+global-exclude *.so
+global-exclude .git*

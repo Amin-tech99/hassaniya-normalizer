@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hassaniya Text Normalizer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Hassaniya Text Normalizer</h1>
+            <p>This tool normalizes Hassaniya Arabic text using letter-level rules and variant mappings.</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="openTab(event, 'normalizer')">Text Normalizer</button>
+            <button class="tab-button" onclick="openTab(event, 'variants')">Variant Manager</button>
+            <button class="tab-button" onclick="openTab(event, 'separation')">Word Separation Manager</button>
+        </div>
+
+        <!-- Text Normalizer Tab -->
+        <div id="normalizer" class="tab-content active">
+            <div class="section">
+                <h2>Normalize Text</h2>
+                <div class="input-group">
+                    <label for="input-text">Input Text:</label>
+                    <textarea id="input-text" placeholder="Enter Hassaniya text to normalize..." rows="5"></textarea>
+                </div>
+                
+                <div class="options">
+                    <label>
+                        <input type="checkbox" id="show-diff"> Show differences (highlighted)
+                    </label>
+                </div>
+                
+                <button class="btn-primary" onclick="normalizeText()">Normalize</button>
+                
+                <div class="output-group">
+                    <label>Normalized Text:</label>
+                    <div id="output-text" class="output-box">Normalized text will appear here...</div>
+                </div>
+                
+                <div class="output-group">
+                    <label>Unknown Variants:</label>
+                    <div id="unknown-variants" class="info-box">Unknown variants info will appear here...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Variant Manager Tab -->
+        <div id="variants" class="tab-content">
+            <div class="section">
+                <h2>Add New Word Variants</h2>
+                <p>Use this section to add new canonical words and their variants to the normalizer database.</p>
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="canonical-word">Canonical Word:</label>
+                        <input type="text" id="canonical-word" placeholder="Enter the canonical (standard) form...">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="variant-words">Variants:</label>
+                        <textarea id="variant-words" placeholder="Enter variants separated by commas (e.g., الي, ألي, إلي)..." rows="2"></textarea>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="addVariant()">Add Variant</button>
+                
+                <div class="output-group">
+                    <label>Status:</label>
+                    <div id="variant-status" class="status-box">Ready to add new variants...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Word Separation Manager Tab -->
+        <div id="separation" class="tab-content">
+            <div class="section">
+                <h2>Add Word Separation Pairs</h2>
+                <p>Use this section to add pairs of words that are sometimes written separately but should be linked together.</p>
+                
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="separated-form">Separated Form:</label>
+                        <input type="text" id="separated-form" placeholder="Enter the separated form (e.g., في ما)...">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="linked-form">Linked Form:</label>
+                        <input type="text" id="linked-form" placeholder="Enter the correct linked form (e.g., فيما)...">
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="addSeparation()">Add Separation Pair</button>
+                
+                <div class="output-group">
+                    <label>Status:</label>
+                    <div id="separation-status" class="status-box">Ready to add new word separation pairs...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
